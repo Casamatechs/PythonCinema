@@ -43,15 +43,15 @@ class Cinema:
         return self.__allocated_spectators
 
     def show_seats(self):
-        num_cols = len(self.__room[0] * 11)
+        num_cols = len(self.__room[0] * 10) + 1
         num_spaces = int((num_cols - len("SCREEN") - 2) / 2)
 
         print("#" * num_cols + 
-              "\n#" + " " * num_spaces + "SCREEN" + " " * num_spaces + "#\n" 
+              "\n#" + " " * num_spaces + "SCREEN" + " " * (num_spaces + 1) + "#\n"
               + "#" * num_cols)
 
-        print("\n\n\n")
-        print('\n'.join([''.join([f' {seat.__str__()} ' for seat in row]) for row in self.__room]))
+        print("\n\n")
+        print('\n'.join([''.join([f' {seat.__str__()}' for seat in row]) for row in self.__room]))
         return None
 
     def get_seats(self):
