@@ -1,5 +1,4 @@
-import string
-from random import random
+import random as rand
 from typing import List
 
 from film import Film
@@ -25,8 +24,8 @@ class Cinema:
                 allocated = False
 
                 while not allocated:
-                    row = random.randint(0, num_rows)
-                    col = random.randint(0, num_cols)
+                    row = rand.randint(0, num_rows-1)
+                    col = rand.randint(0, num_cols-1)
                     allocated = self.__allocate_spectator(spectator, self.__room[row][col])
 
     def __allocate_spectator(self, spectator: Spectator, seat: Seat):
@@ -44,7 +43,7 @@ class Cinema:
         return self.__allocated_spectators
 
     def show_seats(self):
-        num_cols = len(self.__room[0] * 7)
+        num_cols = len(self.__room[0] * 10)
         num_spaces = int((num_cols - len("SCREEN") - 2) / 2)
 
         print("#" * num_cols + "\n#" + " " * num_spaces + "SCREEN" + " " * num_spaces + "#\n" + "#" * num_cols)

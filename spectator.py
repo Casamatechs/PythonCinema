@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from film import Film
-from seat import Seat
 
 
 class Spectator:
