@@ -1,4 +1,4 @@
-from functools import reduce
+import random as rand
 from typing import List
 
 from film import Film
@@ -8,43 +8,53 @@ from spectator import Spectator
 
 class Cinema:
 
-    __seats: List[List[Seat]]
-    __film: Film
-
-    def __init__(self, nRows: int, nColumns: int, film: Film):
+    def __init__(self, film: Film, rows: int, cols: int):
         self.__film = film
-        self.__seats = self.__generateSeats(nRows, nColumns)
+        self.__allocated_seats = 0
+        self.__allocated_spectators = []
+        self.__max_seats = int(rows * cols)
+        self.__room = [[Seat(row + 1, col + 1) for col in range(cols)] for row in range(rows)]
 
-    def __generateSeats(self, rows: int, cols: int):
-        seatsArray: List[str] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
-                                 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
-        seats: List[List[Seat]] = []
-        for i in range(rows):
-            rowSeats: List[Seat] = []
-            for j in range(cols):
-                rowSeats.append(Seat(i + 1, seatsArray[j]))
-            seats.append(rowSeats)
-        return seats
+    def allocate_spectators(self, spectator_list: List[Spectator]):
+        num_rows = len(self.__room)
+        num_cols = len(self.__room[0])
 
-    def allocateSpectators(self, spectatorList: List[Spectator]):
+        for spectator in spectator_list:
+            if spectator.can_buy_film_ticket(self.__film):
+                allocated = False
+
+                while not allocated:
+                    row = rand.randint(0, num_rows-1)
+                    col = rand.randint(0, num_cols-1)
+                    allocated = self.__allocate_spectator(spectator, self.__room[row][col])
+
+    def __allocate_spectator(self, spectator: Spectator, seat: Seat):
+        result = False
+
+        if seat.check_availability():
+            seat.occupy_seat(spectator)
+            self.__allocated_spectators.append(spectator)
+            self.__allocated_seats = self.__allocated_seats + 1
+            result = True
+
+        return result
+
+    def get_allocated_spectators(self):
+        return self.__allocated_spectators
+
+    def show_seats(self):
+        num_cols = len(self.__room[0] * 10)
+        num_spaces = int((num_cols - len("SCREEN") - 2) / 2)
+
+        print("#" * num_cols + "\n#" + " " * num_spaces + "SCREEN" + " " * num_spaces + "#\n" + "#" * num_cols)
+        print("\n\n\n")
+        print('\n'.join([''.join([f' {seat.__str__()} ' for seat in row]) for row in self.__room]))
         return None
 
-    def getAllocatedSpectators(self):
-        return None
+    def get_seats(self):
+        list_seats = []
 
-    def showSeats(self):
-        nCol: int = len(self.__seats[0])
-        upDownScreenLine: str = '#'*(8*nCol+1)
-        screenLine: str = '#{}SCREEN{}#'.format(' '*int((8*nCol-7)/2), ' '*int((8*nCol-7)/2+1))
-        print(upDownScreenLine)
-        print(screenLine)
-        print(upDownScreenLine)
-        print('\n\n')
-        for row in self.__seats:
-            for seat in row:
-                print(' '+seat.printSeat(), end='')
-            print()
+        for row in self.__room:
+            list_seats = list_seats + row
 
-
-    def getSeats(self) -> List[List[Seat]]:
-        return reduce(list.__add__, self.__seats)
+        return list_seats
