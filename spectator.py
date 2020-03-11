@@ -18,9 +18,6 @@ class Spectator:
         return self.__available_money > film.get_ticket_price() and self.__age > film.get_min_allowed_age()
 
     def __str__(self) -> str:
-        if len(str(self.__spectator_id)) == 1:
-            str_spectator_id = f"{self.__spectator_id} "
-        else:
-            str_spectator_id = f"{self.__spectator_id}"
-
+        str_spectator_id = f"*{self.__spectator_id:<2}"
+       
         return str_spectator_id

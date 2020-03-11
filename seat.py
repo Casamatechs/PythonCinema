@@ -37,9 +37,9 @@ class Seat:
 
     def __str__(self) -> str:
         if self.__spectator:
-            str_seat = f"[*S , {self.__spectator.__str__()}]"
+            str_seat = f"[*S ,{self.__spectator.__str__()}]"
 
         else:
-            str_seat = f"[ {self.__number},  {self.__letter}]"
+            str_seat = f"[ {self.__number:>2},  {self.__letter:>1}]"
 
         return str_seat
